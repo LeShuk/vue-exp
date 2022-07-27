@@ -2,38 +2,62 @@
   <!-- Отключаем для формы действия браузера по умолчанию-->
   <form @submit.prevent>
     <!--   Вариант двухстороннего связывания через функцию-->
-    <input
+    <my-input
         v-bind:value="post.title"
         @input="inputTitle"
-        class="input"
         type="text"
         placeholder="Название"/>
     <!--  Вариант двухстороннего связывания через сокращенную запись-->
-    <input
+    <my-input
         v-bind:value="post.body"
         @input="post.body = $event.target.value"
-        class="input"
         type="text"
         placeholder="Описание"/>
-    <button class="btn" >Разместить пост</button>
+    <!--    Вариант двустороннего связывания с директивой v-model-->
+    <my-input
+        v-model="post.emotion"
+        type="text"
+        placeholder="Настроение"
+    />
+    <my-button
+        style="align-self: flex-end; margin-top: 15px"
+        @click="createPost">Разместить пост
+    </my-button>
   </form>
 
 </template>
 
 <script>
+import MyInput from "@/components/UI/MyInput";
 export default {
   name: "PostForm",
+  components: {MyInput},
   data() {
     return {
       post: {
         title: '',
         body: '',
-      }
+        emotion: ''
+      },
+      idCounter: 4
     }
   },
   methods: {
     inputTitle(event) {
       this.post.title = event.target.value;
+    },
+    createPost() {
+      this.post.id = this.idCounter
+
+      //Создаем событие, на которое подписываем "родительский" компонент. В качестве параметров - имя события и данные,
+      //передаваемые в событии.
+      this.$emit('create', this.post);
+      this.post = {
+        title: '',
+        body: '',
+        emotion: '',
+      };
+      this.idCounter += 1;
     },
   }
 }
@@ -44,21 +68,5 @@ form {
   flex-direction: column;
 }
 
-.btn {
-  margin-top: 15px;
-  padding: 10px 15px;
-  background: none;
-  color: teal;
-  border: 1px solid teal;
-  align-self: flex-end;
 
-}
-
-.input {
-  width: 100%;
-  padding: 10px 15px;
-  margin-top: 15px;
-  border: 1px solid teal;
-
-}
 </style>

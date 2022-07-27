@@ -1,7 +1,11 @@
 <template>
   <div class="app">
-    <post-form />
-    <post-list :posts="posts"/>
+    <post-form
+        @create="createPost"
+    />
+    <post-list
+        :posts="posts"
+    />
   </div>
 </template>
 
@@ -17,29 +21,31 @@ export default {
   data() {
     return {
       posts: [
-        {id: 1, title: 'Дневничок разработчика (нет)', body: 'Изучаю vue.js, полет нормальный...'},
-        {id: 2, title: 'Дневничок разработчика (нет)', body: 'Цикличный вывод данных в компоненте.'},
-        {id: 3, title: 'Мысли вслух',
-          body: 'Немного подбешивает, что приходится тексты выдумывать. Знаю, есть генераторы, но искать их зело лень.'},
+        {
+          id: 1,
+          title: 'Дневничок разработчика (нет)',
+          body: 'Изучаю vue.js, полет нормальный...',
+          emotion: 'Задумчивый'
+        },
+        {
+          id: 2,
+          title: 'Дневничок разработчика (нет)',
+          body: 'Цикличный вывод данных в компоненте.',
+          emotion: 'Деловитый'
+        },
+        {
+          id: 3,
+          title: 'Мысли вслух',
+          body: 'Немного подбешивает, что приходится тексты выдумывать. Знаю, есть генераторы, но искать их зело лень.',
+          emotion: 'Мне кажется, я просыпаюсь...'
+        },
       ],
-      formTitle: '',
-      formBody: '',
-      idCounter: 4,
     }
   },
   methods: {
-    createPost() {
-      const newPost = {
-        id: this.idCounter,
-        title: this.formTitle,
-        body: this.formBody,
-      }
-      this.posts.push(newPost);
-      this.formTitle = '';
-      this.formBody = '';
-      this.id += 1;
+    createPost(post) {
+      this.posts.push(post);
     },
-
   }
 }
 </script>
