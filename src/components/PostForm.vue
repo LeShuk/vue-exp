@@ -1,4 +1,5 @@
 <template>
+  <h3>Создание записи</h3>
   <!-- Отключаем для формы действия браузера по умолчанию-->
   <form @submit.prevent>
     <!--   Вариант двухстороннего связывания через функцию-->
@@ -28,10 +29,8 @@
 </template>
 
 <script>
-import MyInput from "@/components/UI/MyInput";
 export default {
   name: "PostForm",
-  components: {MyInput},
   data() {
     return {
       post: {

@@ -6,7 +6,10 @@
       <div class="emotion"><strong>Настроение: </strong> {{post.emotion}}</div>
     </div>
     <div class="post-btns">
-      <my-button>X</my-button>
+      <my-button
+      @click="$emit('remove', post)">
+        X
+      </my-button>
     </div>
   </div>
 </template>

@@ -1,10 +1,21 @@
 <template>
   <div class="app">
-    <post-form
-        @create="createPost"
-    />
+    <h1>Страница с записями</h1>
+    <my-button
+        @click="showDialog"
+        style="margin: 15px 0;"
+    >
+      Создать запись
+    </my-button>
+    <my-dialog v-model:show="dialogVisible">
+      <post-form
+          @create="createPost"
+      />
+    </my-dialog>
+
     <post-list
         :posts="posts"
+        @remove="removePost"
     />
   </div>
 </template>
@@ -12,10 +23,14 @@
 <script>
 import PostList from "@/components/PostList";
 import PostForm from "@/components/PostForm";
+import MyDialog from "@/components/UI/MyDialog";
+import MyButton from "@/components/UI/MyButton";
 
 export default {
   name: "App",
   components: {
+    MyButton,
+    MyDialog,
     PostList, PostForm,
   },
   data() {
@@ -40,12 +55,21 @@ export default {
           emotion: 'Мне кажется, я просыпаюсь...'
         },
       ],
+      dialogVisible: false,
     }
   },
   methods: {
     createPost(post) {
       this.posts.push(post);
+      this.dialogVisible = false;
     },
+    removePost(post) {
+      //Фильтр возвращает новый массив. "Просто" удаления элементов из массива в js нет?
+      this.posts = this.posts.filter(p => p.id !== post.id);
+    },
+    showDialog() {
+      this.dialogVisible = true;
+    }
   }
 }
 </script>
