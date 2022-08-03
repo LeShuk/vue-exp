@@ -32,17 +32,7 @@
     <div v-else>
       Загрузка...
     </div>
-<!--    todo: косяк - totalPages не меняеся при удалении поста!
-Подозреваю, что исправить можно, но не в рамках запроса к беку,
-в котором мы не можем реально удалять посты.
--->
-
-    <pagination
-      :total-pages="this.totalPages"
-      :limit="this.limit"
-      :page="this.page"
-      @change-page="changePage"
-    />
+    <div ref="observer" class="observer"></div>
   </div>
 </template>
 
@@ -95,10 +85,6 @@ export default {
       this.dialogVisible = true;
     },
 
-    changePage(pageNumber) {
-      this.page = pageNumber;
-    },
-
     async fetchPosts() {
       try {
         this.isPostLoading = true;
@@ -116,9 +102,37 @@ export default {
         this.isPostLoading = false;
       }
     },
+
+  async loadMorePosts() {
+    try {
+      this.page += 1;
+      const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+        params:{
+          _page: this.page,
+          _limit: this.limit,
+        }
+      });
+      this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
+      this.posts = [...this.posts, ...response.data];
+    } catch (e) {
+      alert('Что-то пошло не так...')
+    }
   },
+},
   mounted() {
     this.fetchPosts();
+
+    const options = {
+      rootMargin: '0px',
+      threshold: 1.0
+    }
+    const callback = (entries, observer) => {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
+        this.loadMorePosts();
+      }
+    };
+    const observer = new IntersectionObserver(callback, options);
+    observer.observe(this.$refs.observer)
   },
 
   computed: {
@@ -139,9 +153,6 @@ export default {
     //     return post1[newValue]?.localeCompare(post2[newValue]);
     //   })
     // }
-    page() {
-      this.fetchPosts();
-    }
   },
 }
 </script>
@@ -161,6 +172,11 @@ export default {
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
+}
+
+.observer {
+  height: 30px;
+  background: green;
 }
 
 </style>
