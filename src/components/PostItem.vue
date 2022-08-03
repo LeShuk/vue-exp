@@ -6,7 +6,12 @@
       <div><strong>Описание:</strong> {{post.body}}</div>
       <div class="emotion"><strong>Настроение: </strong> {{post.emotion}}</div>
     </div>
-    <div class="post-btns">
+    <div class="post_btns">
+      <my-button
+          @click="$router.push(`posts/${post.id}`)"
+      >
+        Открыть
+      </my-button>
       <my-button
       @click="$emit('remove', post)">
         X
@@ -16,8 +21,10 @@
 </template>
 
 <script>
+import MyButton from "@/components/UI/MyButton";
 export default {
   name: "PostItem",
+  components: {MyButton},
   props: {
     post: {
       type: Object,
@@ -39,5 +46,9 @@ export default {
 .emotion {
   font-size: small;
   color: cadetblue;
+}
+
+.post_btns {
+  display: flex;
 }
 </style>
