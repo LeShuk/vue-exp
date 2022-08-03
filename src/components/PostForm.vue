@@ -4,6 +4,7 @@
   <form @submit.prevent>
     <!--   Вариант двухстороннего связывания через функцию-->
     <my-input
+        v-focus
         v-bind:value="post.title"
         @input="inputTitle"
         type="text"
