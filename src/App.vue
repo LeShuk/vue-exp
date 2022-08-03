@@ -32,20 +32,17 @@
     <div v-else>
       Загрузка...
     </div>
-<!--    todo: декомпозировать!-->
-    <div class="page_wrapper">
-      <div
-          v-for="pageNumber in totalPages"
-          :key="pageNumber"
-          class="page"
-          :class="{
-            'current-page': page === pageNumber
-            }"
-          @click="changePage(pageNumber)"
-      >
-        {{pageNumber}}
-      </div>
-    </div>
+<!--    todo: косяк - totalPages не меняеся при удалении поста!
+Подозреваю, что исправить можно, но не в рамках запроса к беку,
+в котором мы не можем реально удалять посты.
+-->
+
+    <pagination
+      :total-pages="this.totalPages"
+      :limit="this.limit"
+      :page="this.page"
+      @change-page="changePage"
+    />
   </div>
 </template>
 
@@ -56,10 +53,12 @@ import MyDialog from "@/components/UI/MyDialog";
 import MyButton from "@/components/UI/MyButton";
 import axios from 'axios';
 import MySelect from "@/components/UI/MySelect";
+import Pagination from "@/components/UI/Pagination";
 
 export default {
   name: "App",
   components: {
+    Pagination,
     MySelect,
     MyButton,
     MyDialog,
@@ -86,16 +85,20 @@ export default {
       this.posts.push(post);
       this.dialogVisible = false;
     },
+
     removePost(post) {
       //Фильтр возвращает новый массив. "Просто" удаления элементов из массива в js нет?
       this.posts = this.posts.filter(p => p.id !== post.id);
     },
+
     showDialog() {
       this.dialogVisible = true;
     },
+
     changePage(pageNumber) {
       this.page = pageNumber;
     },
+
     async fetchPosts() {
       try {
         this.isPostLoading = true;
@@ -117,14 +120,17 @@ export default {
   mounted() {
     this.fetchPosts();
   },
+
   computed: {
     sortedPosts() {
       return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]));
     },
+
     sortedAndFilteredPosts() {
       return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
     }
   },
+
   watch: {
     //Вариант: наблюдаем, если свойство меняется, выполняем функцию. Имя функции должно совпадать с наблюдаемым свойством!
     // минусом - меняется само свойство объекта
@@ -155,20 +161,6 @@ export default {
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
-}
-
-.page_wrapper {
-  display: flex;
-  margin-top: 15px;
-}
-
-.page {
-  border: 1px solid black;
-  padding: 10px;
-}
-
-.current-page {
-  border: 2px solid green;
 }
 
 </style>
