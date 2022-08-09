@@ -4,6 +4,7 @@
     <div class="nav_btns">
       <my-button @click="$router.push('/posts')">Посты</my-button>
       <my-button @click="$router.push('/store')" style="margin-left: 20px">Store&VueX</my-button>
+      <my-button @click="$router.push('/composition')" style="margin-left: 20px">Composition</my-button>
       <my-button @click="$router.push('/about')" style="margin-left: 20px">О главном</my-button>
     </div>
   </div>
